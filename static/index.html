@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CliniFusionX - Medical AI Decision Support</title>
+    <link rel="stylesheet" href="/static/style.css?v=5">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Boxicons for modern icons -->
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+</head>
+<body>
+    <header class="navbar">
+        <div class="logo">
+            <i class='bx bx-pulse'></i>
+            <div>
+                <h1>CliniFusionX</h1>
+                <p>Multimodal AI-Assisted Clinical Decision Support</p>
+            </div>
+        </div>
+        <nav>
+            <a href="#" class="active">Dashboard</a>
+            <a href="#">Analysis</a>
+            <a href="#">Reports</a>
+            <a href="#">About</a>
+        </nav>
+    </header>
+
+    <main class="dashboard">
+        <div class="inputs-container">
+            <section class="card upload-section">
+                <h2><i class='bx bx-image-add'></i> Upload Chest X-ray <span style="font-size: 0.8rem; font-weight: normal; color: var(--text-muted); margin-left: auto;">(Required)</span></h2>
+                <div class="drop-zone" id="drop-zone">
+                    <i class='bx bx-cloud-upload icon-large'></i>
+                    <p>Drag & Drop your X-ray image here</p>
+                    <span>Supported formats: PNG, JPG, DICOM</span>
+                    <input type="file" id="image-input" accept="image/png, image/jpeg, image/jpg" hidden>
+                </div>
+                <div id="image-preview-container" class="hidden">
+                    <div class="image-wrapper" style="position: relative; display: inline-block;">
+                        <img id="image-preview" src="" alt="X-ray Preview">
+                        <img id="cam-image" src="" alt="Grad-CAM Overlay" class="hidden" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; mix-blend-mode: multiply;">
+                        <div id="cam-loading" class="hidden" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background: rgba(0,0,0,0.7); padding: 1rem; border-radius: 8px; color: white;"><div class="spinner"></div> Generating Map...</div>
+                    </div>
+                    
+                    <div class="cam-controls" style="margin-top: 1rem; display: flex; gap: 0.5rem; justify-content: center; align-items: center; flex-wrap: wrap;">
+                        <select id="disease-select" class="dropdown" style="padding: 0.5rem; border-radius: 4px; background: rgba(255,255,255,0.1); color: white; border: 1px solid rgba(255,255,255,0.2);">
+                            <option value="0">Atelectasis</option>
+                            <option value="1">Cardiomegaly</option>
+                            <option value="2">Effusion</option>
+                            <option value="3">Infiltration</option>
+                            <option value="4">Mass</option>
+                            <option value="5">Nodule</option>
+                            <option value="6">Pneumonia</option>
+                            <option value="7">Pneumothorax</option>
+                            <option value="8">Consolidation</option>
+                            <option value="9">Edema</option>
+                            <option value="10">Emphysema</option>
+                            <option value="11">Fibrosis</option>
+                            <option value="12">Pleural_Thickening</option>
+                            <option value="13">Hernia</option>
+                            <option value="14">No Finding</option>
+                        </select>
+                        
+                        <select id="cam-method-select" class="dropdown" style="padding: 0.5rem; border-radius: 4px; background: rgba(255,255,255,0.1); color: white; border: 1px solid rgba(255,255,255,0.2);">
+                            <option value="gradcam">Grad-CAM (Fast)</option>
+                            <option value="scorecam">Score-CAM (Slow/Accurate)</option>
+                        </select>
+                        
+                        <button class="btn btn-primary btn-sm" id="generate-cam-btn">Show Heatmap</button>
+                        <button class="btn btn-secondary btn-sm" id="hide-cam-btn">Hide</button>
+                    </div>
+                    
+                    <div style="margin-top: 1rem;">
+                        <button class="btn btn-secondary btn-sm" id="remove-image">Remove Image</button>
+                    </div>
+                </div>
+            </section>
+
+            <section class="card clinical-section">
+                <h2><i class='bx bx-file-blank'></i> Clinical Information <span style="font-size: 0.8rem; font-weight: normal; color: var(--text-muted); margin-left: auto;">(Optional)</span></h2>
+                <div class="form-row">
+                    <div class="form-group half">
+                        <label>Age</label>
+                        <input type="number" id="clin-age" class="text-input" placeholder="e.g., 62">
+                    </div>
+                    <div class="form-group half">
+                        <label>WBC Lab Value</label>
+                        <input type="text" id="clin-wbc" class="text-input" placeholder="e.g., 12,000 /mcL">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Symptoms</label>
+                    <input type="text" id="clin-symptoms" class="text-input" placeholder="e.g., Cough, Fever">
+                </div>
+                <div class="form-group">
+                    <label>Vitals (SpO2, BP)</label>
+                    <input type="text" id="clin-vitals" class="text-input" placeholder="e.g., SpO2 91%, BP 130/85">
+                </div>
+                <div class="form-group">
+                    <label>Additional Notes / History</label>
+                    <textarea id="clin-notes" rows="2" placeholder="Any other relevant history..."></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Clinical Document Upload (PDF)</label>
+                    <input type="file" id="pdf-input" accept=".pdf" class="file-input">
+                </div>
+            </section>
+        </div>
+        
+        <div class="action-container">
+            <button class="btn btn-primary btn-large" id="analyze-btn" disabled>
+                <i class='bx bx-analyse'></i> Analyze X-ray
+            </button>
+            <div id="loading-state" class="hidden">
+                <div class="spinner"></div>
+                <p id="loading-text">Extracting clinical info & analyzing X-ray...</p>
+            </div>
+        </div>
+
+        <div class="results-container">
+            <section class="card results-section hidden" id="results-panel">
+                <div class="tabs">
+                    <button class="tab active" data-target="findings-tab">AI Findings</button>
+                    <button class="tab" data-target="report-tab">Clinical Report</button>
+                </div>
+
+                <div class="tab-content active" id="findings-tab">
+                    <h3>Swin Transformer Predictions</h3>
+                    <div class="table-container">
+                        <table id="findings-table">
+                            <thead>
+                                <tr>
+                                    <th>Disease</th>
+                                    <th>Probability</th>
+                                    <th>Threshold</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- Populated by JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+
+
+                <div class="tab-content hidden" id="report-tab">
+                    <div class="report-container">
+                        <div class="report-header">
+                            <h2>CliniFusionX AI Analysis Report</h2>
+                            <button class="btn btn-outline btn-sm"><i class='bx bxs-download'></i> Download</button>
+                        </div>
+                        
+                        <div id="report-loading" class="hidden" style="text-align: center; padding: 3rem 0;">
+                            <div class="spinner"></div>
+                            <p style="margin-top: 1rem; color: var(--text-muted);">Generating AI Clinical Report in the background...<br>This may take up to 15 seconds.</p>
+                        </div>
+                        
+                        <div id="report-content">
+                            <div class="report-section">
+                                <h4 style="color: var(--primary); font-size: 1.2rem; margin-bottom: 0.5rem;">1. Clinical Context</h4>
+                                <p id="clinical-context">Loading...</p>
+                            </div>
+                            
+                            <hr style="border: 0; height: 1px; background: rgba(255,255,255,0.1); margin: 1.5rem 0;">
+
+                            <div class="report-section">
+                                <h4 style="color: var(--primary); font-size: 1.2rem; margin-bottom: 0.5rem;">2. Image Model Findings (AI Predictions)</h4>
+                                <p style="font-size: 0.85rem; font-style: italic; color: var(--text-muted); margin-bottom: 1rem;">Note: The following probabilities are generated by a Swin Transformer deep learning model based on the chest X-ray image. These represent statistical likelihoods, not definitive radiological diagnoses.</p>
+                                <div id="image-model-findings" style="line-height: 1.6;">Loading...</div>
+                            </div>
+                            
+                            <hr style="border: 0; height: 1px; background: rgba(255,255,255,0.1); margin: 1.5rem 0;">
+
+                            <div class="report-section">
+                                <h4 style="color: var(--primary); font-size: 1.2rem; margin-bottom: 0.5rem;">3. Clinical Information</h4>
+                                <div id="clinical-information" style="line-height: 1.6;">Loading...</div>
+                            </div>
+                            
+                            <hr style="border: 0; height: 1px; background: rgba(255,255,255,0.1); margin: 1.5rem 0;">
+
+                            <div class="report-section">
+                                <h4 style="color: var(--primary); font-size: 1.2rem; margin-bottom: 0.5rem;">4. Integrated Interpretation</h4>
+                                <div id="integrated-interpretation" style="line-height: 1.6;">Loading...</div>
+                            </div>
+                            
+                            <hr style="border: 0; height: 1px; background: rgba(255,255,255,0.1); margin: 1.5rem 0;">
+                            
+                            <div class="report-section">
+                                <h4 style="color: var(--primary); font-size: 1.2rem; margin-bottom: 0.5rem;">5. Possible Findings / Considerations</h4>
+                                <div id="possible-findings" style="line-height: 1.6;">Loading...</div>
+                            </div>
+                            
+                            <hr style="border: 0; height: 1px; background: rgba(255,255,255,0.1); margin: 1.5rem 0;">
+
+                            <div class="report-section">
+                                <h4 style="color: var(--primary); font-size: 1.2rem; margin-bottom: 0.5rem;">6. Recommended Clinical Correlation & Next Steps</h4>
+                                <div id="recommended-next-steps" style="line-height: 1.6;">Loading...</div>
+                            </div>
+                            
+                            <hr style="border: 0; height: 1px; background: rgba(255,255,255,0.1); margin: 1.5rem 0;">
+                            
+                            <div class="report-section">
+                                <h4 style="color: var(--primary); font-size: 1.2rem; margin-bottom: 0.5rem;">7. Limitations / Disclaimer</h4>
+                                <p style="font-size: 0.85rem; color: var(--text-muted); line-height: 1.5;"><strong>RESEARCH PROTOTYPE DISCLAIMER:</strong> This report incorporates outputs from an artificial intelligence model (Swin Transformer) intended solely for decision support and research evaluation. It does <strong>not</strong> constitute a formal diagnostic reading or definitive clinical diagnosis. AI predictions must be independently validated and interpreted in the context of the complete clinical picture by a qualified, licensed healthcare professional.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+    
+    <script src="/static/script.js?v=5"></script>
+</body>
+</html>

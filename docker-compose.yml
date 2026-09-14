@@ -1,0 +1,20 @@
+version: '3.8'
+
+services:
+  clinifusionx:
+    build: .
+    container_name: clinifusionx
+    ports:
+      - "8000:8000"
+    environment:
+      - LLM_API_KEY=${LLM_API_KEY}
+    volumes:
+      - .:/app
+    # Uncomment below to enable GPU support if nvidia-docker is installed
+    # deploy:
+    #   resources:
+    #     reservations:
+    #       devices:
+    #         - driver: nvidia
+    #           count: 1
+    #           capabilities: [gpu]
