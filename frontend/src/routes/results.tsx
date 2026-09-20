@@ -1,5 +1,6 @@
 import { useState } from 'react';
-import { Download, FileText, CheckCircle2, Maximize2, Droplets, Wind, Layers, Activity } from 'lucide-react';
+import TaxonomyModal from '../components/TaxonomyModal';
+import { Download, FileText, CheckCircle2, Maximize2, Droplets, Wind, Layers, Activity, Eye } from 'lucide-react';
 import clsx from 'clsx';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { getCurrentPatient } from '../services/historyService';
@@ -40,6 +41,7 @@ export default function Results() {
   const location = useLocation();
   
   // Default to categorical (multi-color)
+  const [selectedTaxonomy, setSelectedTaxonomy] = useState<string | null>(null);
   const [colorMode, setColorMode] = useState<'severity' | 'categorical'>(() => {
     return (localStorage.getItem('predictionColorMode') as any) || 'categorical';
   });
@@ -141,6 +143,12 @@ export default function Results() {
             <Download size={16} /> Export
           </button>
           <button 
+            onClick={() => navigate('/explainability', { state: { imagePreview, findings: findingsRaw }})}
+            className="px-4 py-2 border border-indigo-200 dark:border-indigo-800 bg-indigo-50/70 hover:bg-indigo-100 dark:bg-indigo-950/50 dark:hover:bg-indigo-900/60 text-indigo-700 dark:text-indigo-300 rounded-lg text-sm font-semibold shadow-sm flex items-center gap-2 transition-colors cursor-pointer"
+          >
+            <Eye size={16} /> Explain with ScoreCAM
+          </button>
+          <button 
             onClick={() => navigate('/report', { state: { reportText: reportData, recordId, date: recordDate }})}
             className="px-4 py-2 bg-[#0b5c92] hover:bg-blue-800 text-white rounded-lg text-sm font-semibold shadow-sm flex items-center gap-2 transition-colors cursor-pointer"
           >
@@ -155,12 +163,12 @@ export default function Results() {
           <h3 className="text-lg font-display font-bold text-deep-navy dark:text-slate-100">Radiograph</h3>
           <p className="text-xs text-slate-500 dark:text-slate-400 mb-6">Patient chest radiograph ({recordId})</p>
           
-          <div className="relative rounded-2xl overflow-hidden shadow-inner group aspect-square mb-6 border border-slate-200 dark:border-slate-700 bg-slate-900 flex items-center justify-center">
+          <div className="relative rounded-2xl overflow-hidden group mb-6 bg-slate-50 dark:bg-slate-900/30 border border-slate-100 dark:border-slate-800 p-2">
             <div className="absolute top-4 right-4 w-8 h-8 bg-black/40 hover:bg-black/60 backdrop-blur-md rounded-full flex items-center justify-center text-white cursor-pointer transition-colors z-10">
               <Maximize2 size={16} />
             </div>
             {imagePreview ? (
-              <img src={imagePreview} alt={`Radiograph ${recordId}`} className="w-full h-full object-contain" />
+              <img src={imagePreview} alt={`Radiograph ${recordId}`} className="w-full h-auto object-contain max-h-[700px] mx-auto rounded-xl" />
             ) : (
               <div className="w-full h-full bg-slate-800 flex items-center justify-center text-slate-400">
                 <span>No radiograph available</span>
@@ -181,7 +189,7 @@ export default function Results() {
         </div>
 
         {/* Right Column: Top Findings & Context */}
-        <div className="space-y-6">
+        <div className="space-y-6 print:break-before-page" style={{ pageBreakBefore: "always", breakBefore: "page" }}>
           <div className="card-surface p-8">
             <h3 className="text-lg font-display font-bold text-deep-navy dark:text-slate-100">Top Findings</h3>
             <p className="text-xs text-slate-500 dark:text-slate-400 mb-6">Highest model probabilities for this patient.</p>
@@ -190,7 +198,7 @@ export default function Results() {
               {topFindings.map((finding) => (
                 <div key={finding.label} className="border border-slate-100 dark:border-slate-800/80 rounded-xl p-5 hover:border-slate-200 dark:hover:border-slate-700 transition-colors shadow-sm bg-white dark:bg-slate-900/50">
                   <div className="flex items-center justify-between mb-4">
-                    <div className="flex items-center gap-3">
+                    <div className="flex items-center gap-3 cursor-pointer hover:opacity-80 transition-opacity" onClick={() => setSelectedTaxonomy(finding.label)}>
                       <div 
                         className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0 shadow-sm"
                         style={{ backgroundColor: finding.palette.lightBg, color: finding.palette.textColor }}
@@ -206,11 +214,11 @@ export default function Results() {
                   </div>
                   <div className="h-2.5 w-full bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden p-0.5 border border-slate-200/50 dark:border-slate-700/60">
                     <div 
-                      className="h-full rounded-full transition-all duration-1000 shadow-sm" 
+                      className="rounded-full transition-all duration-1000 shadow-sm h-0" 
                       style={{ 
                         width: `${Math.max(finding.prob, 2)}%`,
-                        background: finding.activeGradient 
-                      }}
+                        borderTop: '10px solid ' + finding.activeIndicatorColor,
+}}
                     />
                   </div>
                 </div>
@@ -293,7 +301,7 @@ export default function Results() {
               key={item.label} 
               className="flex items-center gap-4 sm:gap-6 p-2 rounded-xl transition-all group hover:bg-slate-50 dark:hover:bg-slate-800/40"
             >
-              <div className="w-40 sm:w-44 shrink-0 flex items-center gap-2.5">
+              <div className="w-40 sm:w-44 shrink-0 flex items-center gap-2.5 cursor-pointer hover:opacity-80 transition-opacity" onClick={() => setSelectedTaxonomy(item.label)}>
                 <div 
                   className="w-3 h-3 rounded-full shrink-0 shadow-sm transition-transform group-hover:scale-125" 
                   style={{ backgroundColor: item.activeIndicatorColor }}
@@ -304,10 +312,10 @@ export default function Results() {
               <div className="flex-1 flex items-center gap-4">
                 <div className="flex-1 h-3 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden p-0.5 border border-slate-200/50 dark:border-slate-700/60">
                   <div 
-                    className="h-full rounded-full transition-all duration-700 shadow-sm"
+                    className="rounded-full transition-all duration-700 shadow-sm h-0"
                     style={{ 
                       width: `${Math.max(item.prob, item.prob > 0 ? 1.5 : 0)}%`,
-                      background: item.activeGradient 
+                      backgroundColor: item.activeIndicatorColor 
                     }}
                   />
                 </div>
@@ -327,6 +335,7 @@ export default function Results() {
           ))}
         </div>
       </div>
+      <TaxonomyModal conditionId={selectedTaxonomy} onClose={() => setSelectedTaxonomy(null)} />
     </div>
   );
 }

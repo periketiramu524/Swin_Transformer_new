@@ -204,15 +204,15 @@ export default function NewAnalysis() {
       </div>
 
       {error && (
-        <div className="mb-6 p-4 bg-red-50 dark:bg-red-950/60 border border-red-200 dark:border-red-800 text-red-700 dark:text-red-300 rounded-2xl flex items-center gap-3">
+        <div className="mb-4 p-4 bg-red-50 dark:bg-red-950/60 border border-red-200 dark:border-red-800 text-red-700 dark:text-red-300 rounded-2xl flex items-center gap-3">
           <AlertCircle size={20} className="shrink-0" />
           <p className="text-sm font-semibold">{error}</p>
         </div>
       )}
 
-      <div className="card-surface mb-6 p-8">
+      <div className="card-surface mb-4 p-8">
         <h3 className="text-xl font-display font-bold text-deep-navy dark:text-slate-100 mb-1">Upload Chest X-ray</h3>
-        <p className="text-sm text-slate-500 dark:text-slate-400 mb-6">Upload a chest radiograph for AI-assisted analysis.</p>
+        <p className="text-sm text-slate-500 dark:text-slate-400 mb-4">Upload a chest radiograph for AI-assisted analysis.</p>
 
         <div className={clsx(
           "border-2 border-dashed rounded-3xl transition-colors cursor-pointer relative overflow-hidden group",
@@ -234,7 +234,7 @@ export default function NewAnalysis() {
                   <UploadCloud size={32} />
                 </div>
                 <h4 className="text-lg font-bold text-deep-navy dark:text-slate-100 mb-1">Drag & drop your X-ray here</h4>
-                <p className="text-slate-500 dark:text-slate-400 text-sm mb-6">or browse from your device</p>
+                <p className="text-slate-500 dark:text-slate-400 text-sm mb-4">or browse from your device</p>
                 <button className="bg-[#0b5c92] hover:bg-blue-800 text-white px-6 py-2 rounded-full font-semibold text-sm transition-colors shadow-sm relative z-10 pointer-events-none">
                   Choose X-ray
                 </button>
@@ -245,10 +245,10 @@ export default function NewAnalysis() {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-4">
         {/* Patient Information */}
-        <div className="card-surface p-8">
-          <div className="flex items-center justify-between mb-6">
+        <div className="card-surface p-4">
+          <div className="flex items-center justify-between mb-3">
             <div>
               <h3 className="text-lg font-display font-bold text-deep-navy dark:text-slate-100">Patient Information</h3>
               <p className="text-xs text-slate-500 dark:text-slate-400">Basic demographics used as clinical context.</p>
@@ -264,7 +264,7 @@ export default function NewAnalysis() {
                 value={age}
                 onChange={e => setAge(e.target.value)}
                 placeholder="e.g. 58" 
-                className="w-full border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 rounded-xl px-4 py-2.5 text-sm focus:ring-2 focus:ring-[#0b5c92]/20 focus:border-[#0b5c92] outline-none transition-all placeholder:text-slate-400 dark:placeholder:text-slate-500" 
+                className="w-full border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 rounded-xl px-4 py-1.5 text-sm focus:ring-2 focus:ring-[#0b5c92]/20 focus:border-[#0b5c92] outline-none transition-all placeholder:text-slate-400 dark:placeholder:text-slate-500" 
               />
             </div>
             <div>
@@ -272,7 +272,7 @@ export default function NewAnalysis() {
               <select 
                 value={sex}
                 onChange={e => setSex(e.target.value)}
-                className="w-full border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-2.5 text-sm focus:ring-2 focus:ring-[#0b5c92]/20 focus:border-[#0b5c92] outline-none transition-all bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100"
+                className="w-full border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-1.5 text-sm focus:ring-2 focus:ring-[#0b5c92]/20 focus:border-[#0b5c92] outline-none transition-all bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100"
               >
                 <option value="">Select sex</option>
                 <option value="Male">Male</option>
@@ -283,8 +283,8 @@ export default function NewAnalysis() {
         </div>
 
         {/* Symptoms */}
-        <div className="card-surface p-8">
-          <div className="flex items-center justify-between mb-6">
+        <div className="card-surface p-4">
+          <div className="flex items-center justify-between mb-3">
             <div>
               <h3 className="text-lg font-display font-bold text-deep-navy dark:text-slate-100">Symptoms</h3>
               <p className="text-xs text-slate-500 dark:text-slate-400">Select all reported symptoms.</p>
@@ -325,7 +325,7 @@ export default function NewAnalysis() {
 
         {/* Vital Signs */}
         <div className="card-surface p-8">
-          <div className="flex items-center justify-between mb-6">
+          <div className="flex items-center justify-between mb-4">
             <div>
               <h3 className="text-lg font-display font-bold text-deep-navy dark:text-slate-100">Vital Signs</h3>
               <p className="text-xs text-slate-500 dark:text-slate-400">Recorded at time of imaging.</p>
@@ -351,7 +351,7 @@ export default function NewAnalysis() {
 
         {/* Laboratory Data */}
         <div className="card-surface p-8">
-          <div className="flex items-center justify-between mb-6">
+          <div className="flex items-center justify-between mb-4">
             <div>
               <h3 className="text-lg font-display font-bold text-deep-navy dark:text-slate-100">Laboratory Data</h3>
               <p className="text-xs text-slate-500 dark:text-slate-400">Optional values improve clinical context.</p>
@@ -382,14 +382,14 @@ export default function NewAnalysis() {
           <p className="text-xs text-slate-500 dark:text-slate-400">The interface will forward the image and clinical context to your backend.</p>
         </div>
         <div className="flex gap-4 w-full sm:w-auto">
-          <button className="flex-1 sm:flex-none px-6 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 text-sm font-bold text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 flex items-center justify-center gap-2 transition-colors cursor-pointer">
+          <button className="flex-1 sm:flex-none px-6 py-1.5 rounded-xl border border-slate-200 dark:border-slate-700 text-sm font-bold text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 flex items-center justify-center gap-2 transition-colors cursor-pointer">
             <Save size={16} /> Save Draft
           </button>
           <button 
             onClick={handleAnalyze}
             disabled={isProcessing}
             className={clsx(
-              "flex-1 sm:flex-none px-6 py-2.5 rounded-xl text-white text-sm font-bold shadow-md shadow-blue-900/20 flex items-center justify-center gap-2 transition-all cursor-pointer",
+              "flex-1 sm:flex-none px-6 py-1.5 rounded-xl text-white text-sm font-bold shadow-md shadow-blue-900/20 flex items-center justify-center gap-2 transition-all cursor-pointer",
               isProcessing ? "bg-slate-400 cursor-not-allowed" : "bg-[#0b5c92] hover:bg-blue-800"
             )}
           >

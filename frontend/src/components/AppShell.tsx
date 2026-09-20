@@ -6,12 +6,14 @@ import {
   FileSearch, 
   FileText, 
   History, 
+  Eye,
   Box, 
   Settings, 
   Sun,
   Moon,
   LogOut,
-  ChevronDown
+  ChevronDown,
+  User
 } from 'lucide-react';
 import clsx from 'clsx';
 import { getAuthUser, logoutUser, DEFAULT_CLINICIAN } from '../services/authService';
@@ -26,6 +28,7 @@ const navItems = [
   { icon: FileSearch, label: 'Results', path: '/results' },
   { icon: FileText, label: 'Clinical Report', path: '/report' },
   { icon: History, label: 'History', path: '/history' },
+  { icon: Eye, label: 'Explainability', path: '/explainability' },
   { icon: Box, label: 'Model', path: '/model' },
   { icon: Settings, label: 'Settings', path: '/settings' },
 ];
@@ -90,7 +93,7 @@ export default function AppShell({ children }: AppShellProps) {
   };
 
   return (
-    <div className="flex h-screen w-full overflow-hidden font-sans relative bg-gradient-to-br from-[#dce5ed] via-[#f0f4f8] to-[#d0deea] dark:from-[#080d1a] dark:via-[#0b1222] dark:to-[#080b14] bg-fixed text-slate-800 dark:text-slate-100">
+    <div className="flex h-screen w-full overflow-hidden font-sans relative print:block print:h-auto print:overflow-visible bg-gradient-to-br from-[#dce5ed] via-[#f0f4f8] to-[#d0deea] dark:from-[#080d1a] dark:via-[#0b1222] dark:to-[#080b14] bg-fixed text-slate-800 dark:text-slate-100">
       {/* Global Background Glows */}
       <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none">
         <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-teal-100/50 dark:bg-teal-900/20 rounded-full blur-[120px]"></div>
@@ -107,7 +110,7 @@ export default function AppShell({ children }: AppShellProps) {
           />
           <div className="min-w-0 flex-1">
             <h1 className="font-display font-bold text-base tracking-tight text-deep-navy dark:text-white truncate">CliniFusionX</h1>
-            <p className="text-[10px] uppercase tracking-wider text-[#0277b6] dark:text-sky-400 font-bold">Clinical Intelligence</p>
+            <p className="text-[10px] uppercase tracking-wider text-[#0277b6] dark:text-sky-400 font-bold">Medical Insights</p>
           </div>
         </div>
 
@@ -142,14 +145,18 @@ export default function AppShell({ children }: AppShellProps) {
         </nav>
 
         {/* Clinician Card in Sidebar */}
-        <div className="p-3.5 m-3 rounded-2xl bg-slate-50/80 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-800">
+        <div 
+          onClick={() => navigate('/profile')}
+          className="p-3.5 m-3 rounded-2xl bg-slate-50/80 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-800 hover:border-blue-400 dark:hover:border-blue-600 transition-all cursor-pointer group"
+          title="Click to view Doctor Profile"
+        >
           <div className="flex items-center justify-between gap-2">
             <div className="flex items-center gap-2.5 min-w-0">
-              <div className="w-7 h-7 rounded-full bg-rose-600 text-white flex items-center justify-center font-bold text-xs shrink-0">
+              <div className="w-7 h-7 rounded-full bg-rose-600 text-white flex items-center justify-center font-bold text-xs shrink-0 shadow-xs">
                 {currentUser.name.charAt(0) || 'D'}
               </div>
               <div className="min-w-0">
-                <div className="text-xs font-bold text-deep-navy dark:text-slate-200 truncate">
+                <div className="text-xs font-bold text-deep-navy dark:text-slate-200 truncate group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
                   {currentUser.name}
                 </div>
                 <div className="text-[10px] text-slate-400 truncate">
@@ -158,7 +165,7 @@ export default function AppShell({ children }: AppShellProps) {
               </div>
             </div>
             <button
-              onClick={handleLogout}
+              onClick={(e) => { e.stopPropagation(); handleLogout(); }}
               className="p-1.5 rounded-lg text-slate-400 hover:text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-950/40 transition-colors shrink-0 cursor-pointer"
               title="Sign Out"
             >
@@ -169,7 +176,7 @@ export default function AppShell({ children }: AppShellProps) {
       </aside>
 
       {/* Main Content Area */}
-      <div className="flex-1 flex flex-col h-full overflow-hidden relative">
+      <div className="flex-1 flex flex-col h-full overflow-hidden relative print:block print:h-auto print:overflow-visible">
         
         {/* Top Header */}
         <header className="h-16 flex items-center justify-between px-8 bg-transparent shrink-0 border-b border-slate-200/50 dark:border-slate-800/80">
@@ -238,6 +245,14 @@ export default function AppShell({ children }: AppShellProps) {
                     <div className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">{currentUser.role}</div>
                     <div className="text-[10px] text-slate-400 font-mono mt-1">{currentUser.department}</div>
                   </div>
+
+                  <button
+                    onClick={() => { setUserMenuOpen(false); navigate('/settings'); }}
+                    className="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-bold text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors cursor-pointer mb-1"
+                  >
+                    <User size={15} className="text-blue-500" />
+                    <span>View & Edit Doctor Profile</span>
+                  </button>
 
                   <button
                     onClick={handleLogout}

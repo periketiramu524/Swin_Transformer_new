@@ -260,7 +260,7 @@ export function setCurrentPatient(id: string): void {
 export function saveAnalysis(record: Omit<AnalysisRecord, 'id' | 'timestamp' | 'date'>): AnalysisRecord {
   const { storageKey } = getUserStorageKeys();
   const current = getHistory();
-  const nextNum = Math.floor(2482 + current.length + Math.random() * 5);
+  const nextNum = 2401 + current.length;
   const now = new Date();
   
   const newRecord: AnalysisRecord = {

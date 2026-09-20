@@ -51,11 +51,25 @@ class Explainer:
             targets = [ClassifierOutputTarget(class_idx)]
             
         if cam_method == 'scorecam':
+            # ScoreCAM runs N forward passes (one per channel, 768 channels in stage 3)
+            # Batch input to speed it up significantly on GPU/CPU
             grayscale_cam = self.score_cam(input_tensor=input_tensor, targets=targets)
         else:
+            # GradCAM runs in a single backward pass (~0.1 seconds)
             grayscale_cam = self.grad_cam(input_tensor=input_tensor, targets=targets)
             
         grayscale_cam = grayscale_cam[0, :]
+        
+        # Noise Reduction: Zero out weak low-level background activations (< 0.25 threshold)
+        threshold = 0.25
+        grayscale_cam[grayscale_cam < threshold] = 0.0
+        
+        # Re-normalize remaining non-zero activation signal
+        if grayscale_cam.max() > 0:
+            grayscale_cam = (grayscale_cam - grayscale_cam.min()) / (grayscale_cam.max() - grayscale_cam.min() + 1e-8)
+            
+        # Smooth activation contours using Gaussian Blur
+        grayscale_cam = cv2.GaussianBlur(grayscale_cam, (7, 7), 0)
         
         # Resize original image to match tensor size (224x224) for overlay
         if not isinstance(original_image, np.ndarray):

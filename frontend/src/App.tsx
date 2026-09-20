@@ -6,8 +6,10 @@ import NewAnalysis from './routes/new-analysis';
 import Results from './routes/results';
 import ClinicalReport from './routes/report';
 import Settings from './routes/settings';
+import Profile from './routes/profile';
 import ModelTab from './routes/model';
 import PatientHistory from './routes/history';
+import Explainability from './routes/explainability';
 import Login from './routes/login';
 import { isAuthenticated } from './services/authService';
 
@@ -28,8 +30,10 @@ function App() {
         <Route path="/results" element={<ProtectedLayout><Results /></ProtectedLayout>} />
         <Route path="/report" element={<ProtectedLayout><ClinicalReport /></ProtectedLayout>} />
         <Route path="/history" element={<ProtectedLayout><PatientHistory /></ProtectedLayout>} />
+        <Route path="/explainability" element={<ProtectedLayout><Explainability /></ProtectedLayout>} />
         <Route path="/model" element={<ProtectedLayout><ModelTab /></ProtectedLayout>} />
         <Route path="/settings" element={<ProtectedLayout><Settings /></ProtectedLayout>} />
+        <Route path="/profile" element={<ProtectedLayout><Profile /></ProtectedLayout>} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </BrowserRouter>
