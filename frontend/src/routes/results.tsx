@@ -214,10 +214,10 @@ export default function Results() {
                   </div>
                   <div className="h-2.5 w-full bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden p-0.5 border border-slate-200/50 dark:border-slate-700/60">
                     <div 
-                      className="rounded-full transition-all duration-1000 shadow-sm h-0" 
+                      className="rounded-full transition-all duration-1000 shadow-sm h-full" 
                       style={{ 
                         width: `${Math.max(finding.prob, 2)}%`,
-                        borderTop: '10px solid ' + finding.activeIndicatorColor,
+                        backgroundColor: finding.activeIndicatorColor,
 }}
                     />
                   </div>
@@ -312,7 +312,7 @@ export default function Results() {
               <div className="flex-1 flex items-center gap-4">
                 <div className="flex-1 h-3 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden p-0.5 border border-slate-200/50 dark:border-slate-700/60">
                   <div 
-                    className="rounded-full transition-all duration-700 shadow-sm h-0"
+                    className="rounded-full transition-all duration-700 shadow-sm h-full"
                     style={{ 
                       width: `${Math.max(item.prob, item.prob > 0 ? 1.5 : 0)}%`,
                       backgroundColor: item.activeIndicatorColor 
