@@ -35,7 +35,7 @@ export default function Login() {
     setError(null);
     if (!username.trim()) { setError('Please enter a username'); return; }
     setLoading(true);
-    setTimeout(() => { loginUser(isSignUp ? fullName : username, role); setLoading(false); navigate('/'); }, 400);
+    setTimeout(() => { loginUser(username, role, isSignUp ? fullName : undefined); setLoading(false); navigate('/'); }, 400);
   };
 
   const handleGuestLogin = () => {

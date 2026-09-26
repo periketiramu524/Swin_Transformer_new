@@ -37,24 +37,39 @@ export function isAuthenticated(): boolean {
   return localStorage.getItem(AUTH_STATUS_KEY) === 'true';
 }
 
-export function loginUser(username: string, role = 'Attending Radiologist'): AuthUser {
-  const cleanName = username.trim();
-  if (cleanName.toLowerCase() === 'guest' || !cleanName) {
+function formatDoctorName(raw: string): string {
+  const clean = raw.trim();
+  if (!clean) return 'Dr. Clinician';
+  if (clean.toLowerCase() === 'guest') return 'Guest';
+
+  // Capitalise each word appropriately
+  const formatted = clean.split(/\s+/).map(w => {
+    if (!w) return '';
+    if (w.toLowerCase() === 'dr' || w.toLowerCase() === 'dr.') return 'Dr.';
+    return w.charAt(0).toUpperCase() + w.slice(1);
+  }).join(' ');
+
+  if (!formatted.toLowerCase().startsWith('dr.')) {
+    return `Dr. ${formatted}`;
+  }
+  return formatted;
+}
+
+export function loginUser(username: string, role?: string, fullName?: string): AuthUser {
+  const inputName = (fullName && fullName.trim()) ? fullName.trim() : username.trim();
+  if (inputName.toLowerCase() === 'guest' || !inputName) {
     localStorage.setItem(AUTH_USER_KEY, JSON.stringify(DEFAULT_CLINICIAN));
     localStorage.setItem(AUTH_STATUS_KEY, 'true');
     return DEFAULT_CLINICIAN;
   }
 
-  const cleanId = `user_${cleanName.toLowerCase().replace(/[^a-z0-9]/g, '_')}`;
-  let displayName = cleanName;
-  if (!displayName.toLowerCase().startsWith('dr.')) {
-    displayName = `Dr. ${displayName.charAt(0).toUpperCase() + displayName.slice(1)}`;
-  }
+  const cleanId = `user_${inputName.toLowerCase().replace(/[^a-z0-9]/g, '_')}`;
+  const displayName = formatDoctorName(inputName);
 
   const user: AuthUser = {
     id: cleanId,
     name: displayName,
-    role: role || DEFAULT_CLINICIAN.role,
+    role: (role && role.trim()) ? role.trim() : 'Attending Clinician',
     department: 'Division of Pulmonary & Critical Care Imaging',
   };
 
@@ -65,10 +80,7 @@ export function loginUser(username: string, role = 'Attending Radiologist'): Aut
 
 export function loginWithGoogle(name: string, email: string, avatarUrl?: string): AuthUser {
   const cleanId = `google_${(email || name).toLowerCase().replace(/[^a-z0-9]/g, '_')}`;
-  let displayName = name.trim() || 'Google Clinician';
-  if (!displayName.toLowerCase().startsWith('dr.') && displayName.toLowerCase() !== 'guest') {
-    displayName = `Dr. ${displayName}`;
-  }
+  const displayName = formatDoctorName(name.trim() || 'Google Clinician');
 
   const user: AuthUser = {
     id: cleanId,
