@@ -192,7 +192,7 @@ Report generated on ${displayDate} | Record ${displayRecordId}
   };
 
   const MarkdownContent = ({ content }: { content: string }) => (
-    <div className="break-words whitespace-pre-wrap min-w-0 overflow-hidden w-full max-w-full">
+    <div className="break-words min-w-0 overflow-hidden w-full max-w-full">
       <ReactMarkdown
       components={{
         p: ({node, ...props}) => <p className="mb-3 last:mb-0 leading-relaxed text-slate-700 dark:text-slate-300" {...props} />,
