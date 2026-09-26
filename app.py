@@ -116,7 +116,7 @@ async def analyze_xray(
         enriched_findings = run_ccm(image_findings, reported_symptoms)
         
         # 4. Generate Single-Pass Report
-        report = report_generator.generate_report(image_findings, combined_clinical)
+        report = report_generator.generate_report(enriched_findings, combined_clinical)
         
         return {
             "findings": enriched_findings,
