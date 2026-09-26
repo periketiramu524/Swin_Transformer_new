@@ -1,5 +1,7 @@
+import { useState } from 'react';
 import { Cpu, Box, Database, TrendingUp, Layers, Wind, Activity, Maximize, AlertCircle, Eye } from 'lucide-react';
 import clsx from 'clsx';
+import TaxonomyModal from '../components/TaxonomyModal';
 
 const specifications = [
   { label: 'Architecture', value: 'Swin-Tiny · Patch4 · Window7 · 224' },

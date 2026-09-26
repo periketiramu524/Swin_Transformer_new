@@ -359,74 +359,11 @@ export default function Results() {
                     {item.level}
                   </span>
                 </div>
-                {/* CCM Evidence Badge */}
-                {item.ccm && item.ccm.label !== 'N/A' && (
-                  <div className="w-28 shrink-0" title={item.ccm.explanation}>
-                    <span className={clsx(
-                      "text-[9px] uppercase tracking-wider px-2 py-0.5 rounded-full w-full inline-block text-center font-bold border",
-                      item.ccm.label === 'Supportive' && 'bg-emerald-50 text-emerald-700 border-emerald-200 dark:bg-emerald-950/50 dark:text-emerald-300 dark:border-emerald-800',
-                      item.ccm.label === 'Partially Supportive' && 'bg-amber-50 text-amber-700 border-amber-200 dark:bg-amber-950/50 dark:text-amber-300 dark:border-amber-800',
-                      item.ccm.label === 'Insufficient' && 'bg-slate-50 text-slate-500 border-slate-200 dark:bg-slate-800 dark:text-slate-400 dark:border-slate-700',
-                      item.ccm.label === 'Conflicting' && 'bg-rose-50 text-rose-700 border-rose-200 dark:bg-rose-950/50 dark:text-rose-300 dark:border-rose-800',
-                    )}>
-                      {item.ccm.label === 'Partially Supportive' ? 'Partial' : item.ccm.label}
-                    </span>
-                  </div>
-                )}
               </div>
             </div>
           ))}
         </div>
       </div>
-
-      {/* CCM Summary Card */}
-      {allPredictions.some(p => p.ccm && p.ccm.label !== 'N/A') && (
-        <div className="card-surface p-8 mt-6">
-          <h3 className="text-lg font-display font-bold text-deep-navy dark:text-slate-100 mb-1">
-            🩺 Clinical Consistency Analysis
-          </h3>
-          <p className="text-xs text-slate-500 dark:text-slate-400 mb-6">
-            Evidence scores comparing patient-reported symptoms against known disease symptom profiles.
-          </p>
-          <div className="space-y-3">
-            {allPredictions
-              .filter(p => p.prob >= 20 && p.ccm && p.ccm.label !== 'N/A')
-              .map(p => (
-                <div key={p.label} className="flex items-start gap-4 p-4 rounded-xl border border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/30">
-                  <div 
-                    className="w-3 h-3 rounded-full shrink-0 mt-1" 
-                    style={{ backgroundColor: p.activeIndicatorColor }}
-                  />
-                  <div className="flex-1">
-                    <div className="flex items-center gap-3 mb-1">
-                      <span className="font-bold text-sm text-deep-navy dark:text-slate-100">{p.label}</span>
-                      <span className={clsx(
-                        "text-[9px] uppercase tracking-wider px-2 py-0.5 rounded-full font-bold border",
-                        p.ccm.label === 'Supportive' && 'bg-emerald-50 text-emerald-700 border-emerald-200 dark:bg-emerald-950/50 dark:text-emerald-300 dark:border-emerald-800',
-                        p.ccm.label === 'Partially Supportive' && 'bg-amber-50 text-amber-700 border-amber-200 dark:bg-amber-950/50 dark:text-amber-300 dark:border-amber-800',
-                        p.ccm.label === 'Insufficient' && 'bg-slate-50 text-slate-500 border-slate-200 dark:bg-slate-800 dark:text-slate-400 dark:border-slate-700',
-                        p.ccm.label === 'Conflicting' && 'bg-rose-50 text-rose-700 border-rose-200 dark:bg-rose-950/50 dark:text-rose-300 dark:border-rose-800',
-                      )}>
-                        {p.ccm.label} ({(p.ccm.score * 100).toFixed(0)}%)
-                      </span>
-                    </div>
-                    <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">{p.ccm.explanation}</p>
-                    {p.ccm.matched.length > 0 && (
-                      <div className="flex flex-wrap gap-1.5 mt-2">
-                        {p.ccm.matched.map((s: string) => (
-                          <span key={s} className="text-[10px] bg-emerald-100 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-300 px-2 py-0.5 rounded-full font-semibold capitalize">✓ {s}</span>
-                        ))}
-                        {p.ccm.expected.filter((s: string) => !p.ccm.matched.includes(s)).map((s: string) => (
-                          <span key={s} className="text-[10px] bg-slate-100 dark:bg-slate-800 text-slate-400 px-2 py-0.5 rounded-full capitalize">○ {s}</span>
-                        ))}
-                      </div>
-                    )}
-                  </div>
-                </div>
-              ))}
-          </div>
-        </div>
-      )}
     </div>
   );
 }
