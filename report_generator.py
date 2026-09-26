@@ -183,6 +183,11 @@ class ReportGenerator:
                     
                 llm_output = json.loads(resp_text)
                 
+                # Fix literal escaped newlines that LLM sometimes outputs
+                for key in llm_output:
+                    if isinstance(llm_output[key], str):
+                        llm_output[key] = llm_output[key].replace('\\n', '\n')
+                        
                 # Verify non-empty output
                 if llm_output.get("clinical_context") and llm_output.get("integrated_interpretation"):
                     return {
@@ -284,12 +289,26 @@ class ReportGenerator:
         lines_clin = []
         lines_clin.append("### Patient Clinical Profile & Extracted Parameters:")
         if text:
-            for line in text.split('\n'):
+            # Fix escaped newlines if they somehow reached here
+            safe_text = text.replace('\n', '
+')
+            for line in safe_text.split('
+'):
                 clean_l = line.strip()
                 if clean_l:
                     lines_clin.append(f"- **{clean_l}**")
+            
+            # Inject CCM evidence if available
+            has_ccm = any('ccm' in f and f['ccm'] and f['ccm'].get('label') != 'N/A' for f in image_findings)
+            if has_ccm:
+                lines_clin.append("
+### Clinical Consistency & Symptom Alignment (CCM):")
+                for f in [x for x in image_findings if 'ccm' in x and x['ccm'] and x['ccm'].get('label') != 'N/A']:
+                    lines_clin.append(f"- **{f['disease']}**: {f['ccm']['label']} alignment (Score: {f['ccm']['score']*100:.0f}%). Symptoms matched: {', '.join(f['ccm'].get('matched', [])) or 'None'}")
+            
             lines_clin.append(
-                "\n*Correlation Note: Presenting symptoms and physical examination markers were integrated directly into the multimodal Bayesian differential assessment below.*"
+                "
+*Fusion Mechanism Note: The above reported symptoms and their structured alignment scores were combined with the Swin Transformer Vision AI using **Decision-Level Late Fusion** to generate the final interpretation.*"
             )
         else:
             lines_clin.append("- **Demographics & History:** Not provided in initial transmission.")
