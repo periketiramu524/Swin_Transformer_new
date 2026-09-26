@@ -192,7 +192,8 @@ Report generated on ${displayDate} | Record ${displayRecordId}
   };
 
   const MarkdownContent = ({ content }: { content: string }) => (
-    <ReactMarkdown
+    <div className="break-words whitespace-pre-wrap min-w-0 overflow-hidden w-full max-w-full">
+      <ReactMarkdown
       components={{
         p: ({node, ...props}) => <p className="mb-3 last:mb-0 leading-relaxed text-slate-700 dark:text-slate-300" {...props} />,
         ul: ({node, ...props}) => <ul className="list-disc pl-5 mb-4 space-y-2 text-slate-700 dark:text-slate-300" {...props} />,
@@ -206,6 +207,7 @@ Report generated on ${displayDate} | Record ${displayRecordId}
     >
       {content || "No data provided."}
     </ReactMarkdown>
+    </div>
   );
 
   /* ── Reusable section heading (numbered circle + title) ── */
