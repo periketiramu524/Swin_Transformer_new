@@ -243,7 +243,7 @@ class ReportGenerator:
         # -------------------------------------------------------------
         lines_img = []
         lines_img.append(
-            "The radiograph was analyzed using the **Swin-Tiny · Patch4 · Window7 · 224** hierarchical Vision Transformer, fine-tuned on the benchmark NIH ChestX-ray14 multi-label corpus. Quantitative multi-label calibrated posterior probabilities are stratified below:"
+            "The radiograph was analyzed using the **Swin Transformer** hierarchical Vision Transformer, fine-tuned on the benchmark NIH ChestX-ray14 multi-label corpus. Quantitative multi-label calibrated posterior probabilities are stratified below:"
         )
         
         if primary_findings:

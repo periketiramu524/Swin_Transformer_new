@@ -67,7 +67,7 @@ PATIENT & STUDY INFORMATION
 Record ID      : ${displayRecordId}
 Report Date    : ${displayDate}
 Modality       : Chest X-ray (PA view)
-AI Model       : Swin-Tiny · Patch4 · Window7 · 224 (NIH ChestX-ray14)
+AI Model       : Swin Transformer (NIH ChestX-ray14)
 Ordering Physician : ${currentUser.name === 'Guest' ? 'Not specified' : currentUser.name}
 
 ================================================================================
@@ -254,7 +254,7 @@ Report generated on ${displayDate} | Record ${displayRecordId}
           <div className="bg-[#0b5c92] rounded-3xl p-8 sm:p-10 text-white shadow-xl relative overflow-hidden mb-10 print:rounded-2xl print:p-6 print:mb-6">
             <div className="relative z-10">
               <div className="inline-block px-3 py-1 rounded-full bg-white/20 text-xs font-semibold backdrop-blur-md mb-6 border border-white/20">
-                AI Generated • Research Prototype
+                AI Generated - Research Prototype
               </div>
               <h2 className="text-3xl sm:text-4xl font-display font-bold mb-8">Chest X-Ray Report</h2>
               
@@ -269,7 +269,7 @@ Report generated on ${displayDate} | Record ${displayRecordId}
                 </div>
                 <div className="bg-white/10 rounded-xl p-4 border border-white/20 backdrop-blur-sm">
                   <div className="text-[10px] font-bold text-blue-200 uppercase tracking-wider mb-1">AI Model</div>
-                  <div className="font-semibold text-base truncate">Swin-Tiny · Patch4 · Window7 · 224</div>
+                  <div className="font-semibold text-base truncate">Swin Transformer</div>
                 </div>
               </div>
             </div>
@@ -330,7 +330,7 @@ Report generated on ${displayDate} | Record ${displayRecordId}
                   />
                   {/* Film Marker Overlays */}
                   <div className="absolute top-3 left-3 px-2.5 py-1 rounded-lg bg-black/75 backdrop-blur-xs text-[11px] font-mono font-bold text-white border border-white/20 shadow-xs">
-                    R • PA ERECT
+                    R - PA ERECT
                   </div>
                   <div className="absolute bottom-3 right-3 px-2.5 py-1 rounded-lg bg-black/75 backdrop-blur-xs text-[11px] font-mono font-bold text-sky-400 border border-white/20 shadow-xs">
                     {displayRecordId}
@@ -383,7 +383,7 @@ Report generated on ${displayDate} | Record ${displayRecordId}
                     </div>
                     <div className="flex gap-2">
                       <span className="font-semibold text-slate-500 dark:text-slate-400 min-w-[130px]">AI Model Used:</span>
-                      <span className="text-slate-800 dark:text-slate-200">Swin-Tiny · Patch4 · Window7 · 224</span>
+                      <span className="text-slate-800 dark:text-slate-200">Swin Transformer</span>
                     </div>
                     <div className="flex gap-2">
                       <span className="font-semibold text-slate-500 dark:text-slate-400 min-w-[130px]">Dataset:</span>
@@ -577,10 +577,10 @@ Report generated on ${displayDate} | Record ${displayRecordId}
                     {currentUser.name === 'Guest' ? 'Guest Attending Clinician' : currentUser.name}{currentUser.name !== 'Guest' ? ', MD' : ''}
                   </div>
                   <div className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
-                    {currentUser.role} • {currentUser.department}
+                    {currentUser.role} - {currentUser.department}
                   </div>
                   <div className="text-[11px] text-slate-400 mt-2 font-mono">
-                    NPI: 1942083152 • Verification Hash: SHA256-A78F-CXR99 • Signed: {displayDate}
+                    NPI: 1942083152 - Verification Hash: SHA256-A78F-CXR99 - Signed: {displayDate}
                   </div>
                 </div>
 
@@ -694,8 +694,8 @@ Report generated on ${displayDate} | Record ${displayRecordId}
 
             <div className="w-full flex items-center justify-between mb-4 pr-12">
               <div>
-                <h4 className="text-sm font-bold text-white">Full-Resolution Chest Radiograph • {displayRecordId}</h4>
-                <p className="text-xs text-slate-400">PA projection • Swin Transformer AI analysis</p>
+                <h4 className="text-sm font-bold text-white">Full-Resolution Chest Radiograph - {displayRecordId}</h4>
+                <p className="text-xs text-slate-400">PA projection - Swin Transformer AI analysis</p>
               </div>
               <button
                 type="button"
