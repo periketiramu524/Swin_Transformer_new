@@ -13,6 +13,7 @@ export default function ClinicalReport() {
   const [copied, setCopied] = useState(false);
   const [invertContrast, setInvertContrast] = useState(false);
   const [lightboxOpen, setLightboxOpen] = useState(false);
+  const [imageError, setImageError] = useState(false);
 
   const showToast = (message: string, type: 'success' | 'info' = 'success') => {
     setToast({ message, type });
@@ -249,7 +250,7 @@ Report generated on ${displayDate} | Record ${displayRecordId}
 
       <div className="flex flex-col lg:flex-row gap-8 print:block">
         {/* Main Report Document */}
-        <div className="flex-1 print:w-full print:max-w-none print:m-0 print:p-0">
+        <div className="flex-1 min-w-0 print:w-full print:max-w-none print:m-0 print:p-0">
           {/* Document Header Banner */}
           <div className="bg-[#0b5c92] rounded-3xl p-8 sm:p-10 text-white shadow-xl relative overflow-hidden mb-10 print:rounded-2xl print:p-6 print:mb-6">
             <div className="relative z-10">
