@@ -17,15 +17,15 @@ export default function Login() {
   const navigate = useNavigate();
   const [isSignUp, setIsSignUp] = useState(false);
 
-  const [username, setUsername] = useState('dr.mitchell');
-  const [password, setPassword] = useState('••••••••');
-  const [fullName, setFullName] = useState('Dr. Sarah Mitchell');
-  const [role, setRole] = useState('Lead Thoracic Radiologist');
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+  const [fullName, setFullName] = useState('');
+  const [role, setRole] = useState('');
   const [rememberMe, setRememberMe] = useState(true);
 
   const [showGoogleModal, setShowGoogleModal] = useState(false);
-  const [googleDoctorName, setGoogleDoctorName] = useState('Dr. Sarah Johnson');
-  const [googleDoctorEmail, setGoogleDoctorEmail] = useState('sarah.johnson@radiology.health.org');
+  const [googleDoctorName, setGoogleDoctorName] = useState('');
+  const [googleDoctorEmail, setGoogleDoctorEmail] = useState('');
 
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
@@ -123,7 +123,7 @@ export default function Login() {
             {/* Username — always has blue border */}
             <div className={clsx(inputRow, "py-2 border-sky-400/80 dark:border-sky-500/60 focus-within:border-blue-500 ring-[1.5px] ring-sky-400/20")}>
               <User size={14} className="text-[#0284c7] dark:text-sky-400 shrink-0 mr-2" />
-              <input type="text" placeholder="Username" value={username}
+              <input type="text" placeholder="dr.mitchell" value={username}
                 onChange={(e) => setUsername(e.target.value)}
                 className="w-full bg-transparent text-xs text-slate-700 dark:text-slate-200 placeholder-slate-400 outline-none font-medium py-2" />
             </div>
@@ -131,7 +131,7 @@ export default function Login() {
             {/* Password */}
             <div className={clsx(inputRow, "py-2 focus-within:border-slate-300 dark:focus-within:border-slate-600")}>
               <Lock size={14} className="text-slate-400 dark:text-slate-500 shrink-0 mr-2" />
-              <input type="password" placeholder="Password" value={password}
+              <input type="password" placeholder="••••••••" value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 className="w-full bg-transparent text-xs text-slate-700 dark:text-slate-200 placeholder-slate-400 outline-none font-medium py-2" />
             </div>
