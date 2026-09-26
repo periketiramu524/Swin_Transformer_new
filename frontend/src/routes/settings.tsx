@@ -736,7 +736,7 @@ export default function Settings() {
             </div>
             <div className="border border-slate-200 dark:border-slate-700 rounded-xl p-4 bg-white dark:bg-slate-800/50">
               <div className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">AUROC Metric</div>
-              <div className="font-bold text-sm text-emerald-600 dark:text-emerald-400">0.8386 Micro</div>
+              <div className="font-bold text-sm text-emerald-600 dark:text-emerald-400">0.8250 Micro</div>
             </div>
           </div>
           

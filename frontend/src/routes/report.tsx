@@ -639,14 +639,7 @@ Report generated on ${displayDate} | Record ${displayRecordId}
                 <Share2 size={16} /> Share Report
               </button>
 
-              <div className="pt-2 border-t border-slate-100 dark:border-slate-800">
-                <button
-                  onClick={handleDownloadFile}
-                  className="w-full py-2 text-xs text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200 flex items-center justify-center gap-1.5 transition-colors cursor-pointer"
-                >
-                  <FileDown size={14} /> Export Markdown (.md)
-                </button>
-              </div>
+              
             </div>
           </div>
 

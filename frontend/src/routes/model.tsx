@@ -10,7 +10,7 @@ const specifications = [
   { label: 'Classes', value: '15 Multi-Label Thoracic Pathologies' },
   { label: 'Classification Type', value: 'Multi-Label Binary Cross Entropy' },
   { label: 'Activation Function', value: 'Independent Sigmoid per Class' },
-  { label: 'Evaluation Metric', value: 'Macro AUROC 0.8386' },
+  { label: 'Evaluation Metric', value: 'Macro AUROC 0.8250' },
   { label: 'Framework & Engine', value: 'PyTorch 2.x • timm • CUDA/CPU' },
 ];
 
@@ -88,7 +88,7 @@ export default function ModelTab() {
             <TrendingUp size={18} />
           </div>
           <div className="text-[11px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-1">Macro AUROC</div>
-          <div className="text-2xl font-bold text-emerald-600 dark:text-emerald-400 font-mono">0.8386</div>
+          <div className="text-2xl font-bold text-emerald-600 dark:text-emerald-400 font-mono">0.8250</div>
         </div>
       </div>
 
