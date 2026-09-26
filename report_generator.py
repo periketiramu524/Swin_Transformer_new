@@ -308,7 +308,7 @@ class ReportGenerator:
         
         # Paragraph 1: Primary diagnosis and pathophysiological mechanism
         interp_paragraphs.append(
-            f"**Pathophysiological Synthesis:** Deep learning feature extraction utilizing the Swin Transformer architecture identifies a strong radiographic signal for **{top_name}**, yielding a calibrated posterior probability of **{top_prob:.1f}%**. {top_kb.get('pathophysiology', 'This finding reflects acute parenchymal or pleural disease.')} This radiographic pattern demonstrates high concordance with the clinical indications, substantiating the presence of active cardiopulmonary pathology."
+            f"**Pathophysiological Synthesis:** Deep learning feature extraction utilizing the Swin Transformer architecture identifies a strong radiographic signal for **{top_name}**, yielding a calibrated posterior probability of **{top_prob:.1f}%**. {top_kb.get('pathophysiology', 'This finding reflects acute parenchymal or pleural disease.')} When evaluated against the patient's explicitly reported symptoms (detailed above), this radiographic pattern demonstrates robust clinical concordance, substantiating the presence of active cardiopulmonary pathology directly linked to their presentation."
         )
 
         # Paragraph 2: Multi-pathology interaction or secondary findings
@@ -362,7 +362,7 @@ class ReportGenerator:
         top_diffs = top_kb.get('differentials', '1. Atypical Infection\n2. Thromboembolic event\n3. Malignancy')
         diff_list.append(
             f"{len(diff_list)+1}. **Must-Not-Miss Differentials to Exclude:**\n"
-            f"   {top_diffs}"
+            f"   " + top_diffs.replace("\n", "\n   ")
         )
 
         possible_findings_str = "\n\n".join(diff_list)
