@@ -230,7 +230,7 @@ export default function Results() {
                     <div className="flex items-center gap-3 cursor-pointer hover:opacity-80 transition-opacity" onClick={() => setSelectedTaxonomy(finding.label)}>
                       <div 
                         className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0 shadow-sm"
-                        style={{ backgroundColor: finding.palette.lightBg, color: finding.palette.textColor }}
+                        style={{ backgroundColor: finding.palette.lightBg, boxShadow: "inset 0 0 0 100px " + finding.palette.lightBg, color: finding.palette.textColor }}
                       >
                         <finding.icon size={20} />
                       </div>
@@ -246,7 +246,7 @@ export default function Results() {
                       className="rounded-full transition-all duration-1000 shadow-sm h-full" 
                       style={{ 
                         width: `${Math.max(finding.prob, 2)}%`,
-                        backgroundColor: finding.activeIndicatorColor,
+                        backgroundColor: finding.activeIndicatorColor, boxShadow: "inset 0 0 0 100px " + finding.activeIndicatorColor, borderRight: "2px solid " + finding.activeIndicatorColor,
 }}
                     />
                   </div>
@@ -333,7 +333,7 @@ export default function Results() {
               <div className="w-40 sm:w-44 shrink-0 flex items-center gap-2.5">
                 <div 
                   className="w-3 h-3 rounded-full shrink-0 shadow-sm transition-transform group-hover:scale-125" 
-                  style={{ backgroundColor: item.activeIndicatorColor }}
+                  style={{ backgroundColor: item.activeIndicatorColor, boxShadow: "inset 0 0 0 100px " + item.activeIndicatorColor, borderRight: "2px solid " + item.activeIndicatorColor }}
                 />
                 <span className="font-semibold text-deep-navy dark:text-slate-200 text-sm truncate">{item.label}</span>
               </div>
@@ -344,7 +344,7 @@ export default function Results() {
                     className="rounded-full transition-all duration-700 shadow-sm h-full"
                     style={{ 
                       width: `${Math.max(item.prob, item.prob > 0 ? 1.5 : 0)}%`,
-                      backgroundColor: item.activeIndicatorColor 
+                      backgroundColor: item.activeIndicatorColor, boxShadow: "inset 0 0 0 100px " + item.activeIndicatorColor, borderRight: "2px solid " + item.activeIndicatorColor 
                     }}
                   />
                 </div>
