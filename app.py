@@ -23,6 +23,7 @@ from inference import InferenceEngine
 from explainability import Explainer
 from clinical_extractor import ClinicalExtractor
 from report_generator import ReportGenerator
+from ccm import run_ccm
 
 app = FastAPI(title="CliniFusionX API")
 
@@ -81,7 +82,8 @@ import json
 async def analyze_xray(
     image: UploadFile = File(...),
     clinical_text: str = Form(""),
-    clinical_pdf: UploadFile = File(None)
+    clinical_pdf: UploadFile = File(None),
+    symptoms_json: str = Form("[]")
 ):
     try:
         # Load image
@@ -105,11 +107,19 @@ async def analyze_xray(
         # Combine clinical text
         combined_clinical = clinical_text + f"\n{pdf_text}"
         
-        # 3. Generate Single-Pass Report
+        # 3. Run Clinical Consistency Module (CCM)
+        try:
+            reported_symptoms = json.loads(symptoms_json)
+        except (json.JSONDecodeError, TypeError):
+            reported_symptoms = []
+        
+        enriched_findings = run_ccm(image_findings, reported_symptoms)
+        
+        # 4. Generate Single-Pass Report
         report = report_generator.generate_report(image_findings, combined_clinical)
         
         return {
-            "findings": image_findings,
+            "findings": enriched_findings,
             "report": report
         }
         

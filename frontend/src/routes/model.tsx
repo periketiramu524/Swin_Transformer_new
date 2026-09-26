@@ -31,6 +31,7 @@ const findings = [
 ];
 
 export default function ModelTab() {
+  const [selectedTaxonomy, setSelectedTaxonomy] = useState<string | null>(null);
   return (
     <div className="max-w-5xl mx-auto pb-12 animate-in fade-in duration-500">
       <div className="mb-8">
@@ -126,7 +127,8 @@ export default function ModelTab() {
           {findings.map((item, i) => (
             <div 
               key={i} 
-              className="flex items-center gap-3.5 p-4 border border-slate-200 dark:border-slate-700/80 rounded-2xl bg-slate-50/80 dark:bg-slate-800/80 hover:border-blue-400 dark:hover:border-blue-500 transition-all shadow-xs"
+              className="flex items-center gap-3.5 p-4 border border-slate-200 dark:border-slate-700/80 rounded-2xl bg-slate-50/80 dark:bg-slate-800/80 hover:border-blue-400 dark:hover:border-blue-500 transition-all shadow-xs cursor-pointer"
+              onClick={() => setSelectedTaxonomy(item.name)}
             >
               <div className={clsx("w-10 h-10 rounded-xl flex items-center justify-center shrink-0 border", item.bg, item.color, item.border)}>
                 <item.icon size={18} />
@@ -139,6 +141,7 @@ export default function ModelTab() {
           ))}
         </div>
       </div>
+      <TaxonomyModal conditionId={selectedTaxonomy} onClose={() => setSelectedTaxonomy(null)} />
     </div>
   );
 }

@@ -75,6 +75,9 @@ export default function NewAnalysis() {
       const formData = new FormData();
       formData.append('image', file);
       formData.append('clinical_text', clinicalText.trim());
+      // Send structured symptoms for CCM (Clinical Consistency Module)
+      const allSymptoms = [...symptoms, otherSymptom].filter(Boolean);
+      formData.append('symptoms_json', JSON.stringify(allSymptoms));
 
       const apiBase = (localStorage.getItem('apiBaseUrl') || 'http://localhost:8000').replace(/\/+$/, '');
       const response = await fetch(`${apiBase}/api/analyze`, {
