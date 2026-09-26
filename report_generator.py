@@ -142,36 +142,33 @@ class ReportGenerator:
         # 1. Attempt LLM generation if model is initialized
         if self.model:
             try:
-                findings_str_parts = []
-                for f in image_findings:
-                    base_str = f"- {f['disease']}: {f['probability']*100:.1f}% (Threshold: {f.get('threshold', 0.5)*100:.1f}%)"
-                    if 'ccm' in f and f['ccm'] and f['ccm'].get('label') != 'N/A':
-                        base_str += f" | CCM Evidence: {f['ccm'].get('label')} (Score: {f['ccm'].get('score', 0)*100:.0f}%). Symptoms matched: {', '.join(f['ccm'].get('matched', [])) or 'None'}."
-                    findings_str_parts.append(base_str)
-                findings_str = "\n".join(findings_str_parts)
+                findings_str = "\n".join([
+                    f"- {f['disease']}: {f['probability']*100:.1f}% (Threshold: {f.get('threshold', 0.5)*100:.1f}%)" 
+                    for f in image_findings
+                ])
 
                 prompt = f"""
                 You are a senior thoracic radiologist and clinical pulmonology consultant at an academic medical center.
                 You are conducting an in-depth clinical case evaluation based on quantitative findings from a Swin Transformer 
                 deep learning model and submitted patient clinical records.
 
-                IMAGE FINDINGS (SWIN TRANSFORMER VISION AI + CCM ALIGNMENT):
+                IMAGE FINDINGS (SWIN TRANSFORMER VISION AI):
                 {findings_str}
 
-                RAW CLINICAL INFORMATION (PATIENT SYMPTOMS & HISTORY):
+                RAW CLINICAL INFORMATION:
                 {raw_clinical_text}
 
                 TASK:
                 Generate an exhaustive, highly detailed, professional medical report. Write with rigorous clinical depth, 
-                synthesizing the Swin Transformer image probabilities with the Clinical Consistency Module (CCM) scores 
-                and the patient's explicitly reported symptoms. Show how the visual AI aligns (or conflicts) with the clinical reality.
+                synthesizing the image model probabilities with physiological mechanisms, differential reasoning, and 
+                actionable clinical guidelines.
 
                 Format your response as a valid JSON object with EXACTLY these six keys containing rich Markdown text:
                 {{
-                    "clinical_context": "Multi-paragraph clinical context narrative specifying the patient's explicitly reported symptoms (from the raw clinical info), cardiopulmonary baseline, and formal radiographic study indication.",
-                    "image_model_findings": "Comprehensive categorized markdown breakdown of the Swin Transformer findings into Primary High-Probability (>=50%), Secondary Co-pathologies (15%-50%), and Excluded Low-Probability (<15%) conditions.",
-                    "clinical_information": "Detailed structured breakdown analyzing the patient's symptoms and explicitly discussing the Clinical Consistency Module (CCM) evidence. Explain how the reported symptoms support or conflict with the Swin Transformer's top predictions.",
-                    "integrated_interpretation": "3 to 4 detailed analytical clinical paragraphs correlating radiological findings directly with presenting physiology and symptoms. Synthesize the visual AI probabilities and clinical data into a unified clinical picture.",
+                    "clinical_context": "Multi-paragraph clinical context narrative specifying patient presentation, symptom timeline, cardiopulmonary baseline, physiological stability, and formal radiographic study indication.",
+                    "image_model_findings": "Comprehensive categorized markdown breakdown of the Swin Transformer findings into Primary High-Probability (>=50%), Secondary Co-pathologies (15%-50%), and Excluded Low-Probability (<15%) conditions, detailing exact probabilities, decision thresholds, and specific anatomical radiographic signs.",
+                    "clinical_information": "Detailed structured breakdown containing: Patient Demographics, Chief Complaint & History of Present Illness, Comprehensive Vital Signs Analysis (SpO2, HR, BP, RR, Temp), Laboratory Biomarkers (WBC, inflammatory markers), and Past Medical/Occupational History.",
+                    "integrated_interpretation": "3 to 4 detailed analytical clinical paragraphs correlating radiological findings directly with presenting physiology, discussing pathophysiological mechanisms, clinical severity score context (e.g. CURB-65 / PSI), and AI confidence calibration.",
                     "possible_findings": "Detailed numbered differential diagnosis list with clinical reasoning, matching radiological signs, supporting evidence, and distinguishing clinical criteria for each consideration.",
                     "recommended_next_steps": "Actionable, tiered clinical management plan including: 1. Immediate Acute Stabilization & O2 Titration, 2. Secondary Imaging & POCUS Ultrasound Protocols, 3. Laboratory / Microbiological Diagnostic Workup, and 4. Formal Attending Radiologist Overread Protocol."
                 }}
@@ -308,7 +305,7 @@ class ReportGenerator:
         
         # Paragraph 1: Primary diagnosis and pathophysiological mechanism
         interp_paragraphs.append(
-            f"**Pathophysiological Synthesis:** Deep learning feature extraction utilizing the Swin Transformer architecture identifies a strong radiographic signal for **{top_name}**, yielding a calibrated posterior probability of **{top_prob:.1f}%**. {top_kb.get('pathophysiology', 'This finding reflects acute parenchymal or pleural disease.')} When evaluated against the patient's explicitly reported symptoms (detailed above), this radiographic pattern demonstrates robust clinical concordance, substantiating the presence of active cardiopulmonary pathology directly linked to their presentation."
+            f"**Pathophysiological Synthesis:** Deep learning feature extraction utilizing the Swin Transformer architecture identifies a strong radiographic signal for **{top_name}**, yielding a calibrated posterior probability of **{top_prob:.1f}%**. {top_kb.get('pathophysiology', 'This finding reflects acute parenchymal or pleural disease.')} This radiographic pattern demonstrates high concordance with the clinical indications, substantiating the presence of active cardiopulmonary pathology."
         )
 
         # Paragraph 2: Multi-pathology interaction or secondary findings
@@ -362,7 +359,7 @@ class ReportGenerator:
         top_diffs = top_kb.get('differentials', '1. Atypical Infection\n2. Thromboembolic event\n3. Malignancy')
         diff_list.append(
             f"{len(diff_list)+1}. **Must-Not-Miss Differentials to Exclude:**\n"
-            f"   " + top_diffs.replace("\n", "\n   ")
+            f"   {top_diffs}"
         )
 
         possible_findings_str = "\n\n".join(diff_list)
